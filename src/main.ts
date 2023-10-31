@@ -3,6 +3,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 
 import { store, stateKey } from './store'
+import router from './router'
 
 import PrimeVue from 'primevue/config'
 
@@ -13,9 +14,8 @@ import 'primeicons/primeicons.css'
 
 import './assets/styles/main.scss'
 
-const app = createApp(App)
-
-app.use(PrimeVue)
-app.use(store, stateKey)
-
-app.mount('#app')
+createApp(App)
+  .use(router)
+  .use(store, stateKey)
+  .use(PrimeVue, { ripple: true })
+  .mount('#app')

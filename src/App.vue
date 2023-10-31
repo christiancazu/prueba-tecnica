@@ -3,7 +3,7 @@
 
 <template>
 <main>
-  Prueba técnica
+  <RouterView />
 </main>
 </template>
 
