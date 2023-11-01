@@ -1,8 +1,8 @@
 <template>
-<TheToolbar />
+<Searchbar v-model="searchText" />
 
 <Suspense @resolve="isRequestResolved = true">
-  <CategoryList @change-category="currentCategory = $event" />
+  <CategoryList v-model="currentCategory" />
 
   <template #fallback>
     <div class="flex flex-column mt-4">
@@ -19,10 +19,10 @@
   class="flex justify-content-center"
 >
   <div class="w-9">
-    <!-- <ProductList :products="products" /> -->
     <Suspense :key="currentCategory">
       <ProductList
         :current-category="currentCategory"
+        :search-text="searchText"
       />
       <template #fallback>
         <div class="flex flex-column mt-4">
@@ -39,12 +39,14 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import ProductList from '../components/ProductList.vue'
-import TheToolbar from '../components/TheToolbar.vue'
+
 import ProgressSpinner from 'primevue/progressspinner'
 
+import Searchbar from '../components/Searchbar.vue'
 import CategoryList from '../components/CategoryList.vue'
+import ProductList from '../components/ProductList.vue'
 
 const isRequestResolved = ref<boolean>(false)
-const currentCategory = ref<string>('')
+const currentCategory = ref<string>('All')
+const searchText = ref<string>('')
 </script>

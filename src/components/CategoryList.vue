@@ -35,12 +35,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { useStoreCategories } from '../composables'
-import { Category } from '../models'
 
 import TabMenu from 'primevue/tabmenu'
+
+import { useStoreCategories } from '../composables'
+import { Category } from '../models'
 
 const router = useRouter()
 const route = useRoute()
@@ -49,22 +50,31 @@ const { dispatch_getCategories } = useStoreCategories()
 const activeTab = ref(0)
 const categories = ref<Category[]>([])
 
-const emit = defineEmits(['change-category'])
+defineProps({
+  modelValue: {
+    type: String,
+    default: ''
+  }
+})
 
-onMounted(() => setActiveTab())
+const emit = defineEmits(['update:model-value'])
 
 watch(route, () => {
   setActiveTab()
-  emit('change-category', getCurrentCategory()?.label || 'All')
+  emitCurrentCategory()
 })
 
 function getCurrentCategory (): Category|undefined {
-  activeTab.value = categories.value.findIndex((item) => route.path === router.resolve(item.route).path)
+  setActiveTab()
   return categories.value.find(item => route.path === router.resolve(item.route).path)
 }
 
 function setActiveTab () {
   activeTab.value = categories.value.findIndex((item) => route.path === router.resolve(item.route).path)
+}
+
+function emitCurrentCategory () {
+  emit('update:model-value', getCurrentCategory()?.label || 'All')
 }
 
 // request
@@ -81,6 +91,8 @@ categories.value.push({
   icon: 'all',
   route: '/products'
 })
+
+emitCurrentCategory()
 </script>
 
 <style>

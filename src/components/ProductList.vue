@@ -1,79 +1,95 @@
 <template>
-<div class="grid">
-  <article
-    v-for="product in products"
-    :key="product.id"
-    class="col-12 lg:col-4 p-4"
+<div class="mt-4">
+  <div
+    v-if="filteredProducts.length"
+    class="grid"
   >
-    <Card class="product-card border-round-2xl h-full overflow-hidden shadow-card">
-      <template #header>
-        <div class="product-card__header">
-          <Image
-            alt="user header"
-            class="w-full"
-            preview
-            :src="product.image"
-          />
-          <CategoryChip
-            :category="product.category"
-            class="product-card__category"
-          />
-        </div>
-      </template>
-      <template #content>
-        <div class="flex flex-column justify-content-between h-full">
-          <div class="">
-            <h3 class="mb-3 text-800">
-              {{ product.title }}
-            </h3>
-            <Rating
-              class="mb-3"
-              :rating="product.rating"
+    <article
+      v-for="product in filteredProducts"
+      :key="product.id"
+      class="col-12 lg:col-4 p-4"
+    >
+      <Card class="product-card border-round-2xl h-full overflow-hidden shadow-card">
+        <template #header>
+          <div class="product-card__header">
+            <Image
+              alt="user header"
+              class="w-full"
+              preview
+              :src="product.image"
             />
+            <CategoryChip
+              :category="product.category"
+              class="product-card__category"
+            />
+          </div>
+        </template>
+        <template #content>
+          <div class="flex flex-column justify-content-between h-full">
+            <div class="">
+              <h3 class="mb-3 text-800">
+                {{ product.title }}
+              </h3>
+              <Rating
+                class="mb-3"
+                :rating="product.rating"
+              />
 
-            <span class="text-400">
-              <span v-if="!product.viewMore">
-                {{ product.description.substring(0, 54) }}&nbsp;
+              <span class="text-400">
+                <span v-if="!product.viewMore">
+                  {{ product.description.substring(0, 54) }}&nbsp;
+                </span>
+                <Inplace
+                  class="view-more"
+                  @update:active="(event) => {product.viewMore = event}"
+                >
+                  <template #display>
+                    <div
+                      v-tooltip.top="'Ver más'"
+                      class="text-900"
+                    >
+                      <span>&hellip;</span>
+                    </div>
+                  </template>
+                  <template #content>
+                    <p class="m-0">
+                      {{ product.description }}
+                    </p>
+                  </template>
+                </Inplace>
               </span>
-              <Inplace
-                class="view-more"
-                @update:active="(event) => {product.viewMore = event}"
-              >
-                <template #display>
-                  <div
-                    v-tooltip.top="'Ver más'"
-                    class="text-900"
-                  >
-                    <span>&hellip;</span>
-                  </div>
-                </template>
-                <template #content>
-                  <p class="m-0">
-                    {{ product.description }}
-                  </p>
-                </template>
-              </Inplace>
-            </span>
+            </div>
+            <div class="flex justify-content-between align-items-center mt-4">
+              <Chip class="pl-0 pr-3">
+                <span class="bg-primary border-circle w-2rem h-2rem flex align-items-center justify-content-center font-bold text-800">$</span>
+                <span class="ml-2 font-bold text-800 text-xl">{{ product.price }}</span>
+              </Chip>
+              <Button
+                icon="pi pi-cart-plus"
+                label="Add to Cart"
+                severity="warning"
+              />
+            </div>
           </div>
-          <div class="flex justify-content-between align-items-center mt-4">
-            <Chip class="pl-0 pr-3">
-              <span class="bg-primary border-circle w-2rem h-2rem flex align-items-center justify-content-center font-bold text-800">$</span>
-              <span class="ml-2 font-bold text-800 text-xl">{{ product.price }}</span>
-            </Chip>
-            <Button
-              icon="pi pi-cart-plus"
-              label="Agregar"
-              severity="warning"
-            />
-          </div>
-        </div>
-      </template>
-    </Card>
-  </article>
+        </template>
+      </Card>
+    </article>
+  </div>
+
+  <div
+    v-else
+    class="flex justify-content-center mt-4 w-full"
+  >
+    <h4 class="my-4 text-center text-400">
+      Sorry, no products matched with "{{ searchText }}"
+    </h4>
+  </div>
 </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+
 import Card from 'primevue/card'
 import Image from 'primevue/image'
 import Button from 'primevue/button'
@@ -91,8 +107,18 @@ const props = defineProps({
   currentCategory: {
     type: String,
     default: ''
+  },
+  searchText: {
+    type: String,
+    default: ''
   }
 })
+
+const filteredProducts = computed(() => products.value.filter(product => {
+  const needle = props.searchText.toLowerCase()
+
+  return product.title.toLowerCase().includes(needle)
+}))
 
 await dispatch_getProducts(props.currentCategory)
 </script>
