@@ -14,7 +14,12 @@ export interface Product {
 }
 
 export interface Category {
-  label: string,
-  icon: string,
+  label: string
+  icon: string
   route: string
+}
+
+export interface Order {
+  product: Partial<Product>
+  amount: number
 }

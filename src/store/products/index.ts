@@ -1,20 +1,23 @@
 import { Module } from 'vuex'
-import { Product } from '../../models'
+import { Order, Product } from '../../models'
 import { State } from '..'
 import { axiosInstance } from '../../config'
 
 export interface ProductState {
-  products: Product[]
+  products: Product[],
+  myOrders: Order[],
 }
 
 function state (): ProductState {
   return {
-    products: []
+    products: [],
+    myOrders: []
   }
 }
 
 export const products: Module<ProductState, State> = {
   namespaced: true,
+
   state,
 
   actions: {
@@ -39,8 +42,16 @@ export const products: Module<ProductState, State> = {
   },
 
   mutations: {
-    ['ADD_PRODUCT'] (state: ProductState, product: Product) {
-      state.products.push(product)
+    ['SET_VIEW_MORE'] (state: ProductState, { id, value }: {id: number, value: boolean}) {
+      const product = state.products.find(product => product.id === id)
+
+      if (product) {
+        product.viewMore = value
+      }
+    },
+
+    ['ADD_ORDER'] (state: ProductState, order: Order) {
+      state.myOrders.push(order)
     }
   }
 }

@@ -9,70 +9,10 @@
       :key="product.id"
       class="col-12 lg:col-4 p-4"
     >
-      <Card class="product-card border-round-2xl h-full overflow-hidden shadow-card">
-        <template #header>
-          <div class="product-card__header">
-            <Image
-              alt="user header"
-              class="w-full"
-              preview
-              :src="product.image"
-            />
-            <CategoryChip
-              :category="product.category"
-              class="product-card__category"
-            />
-          </div>
-        </template>
-        <template #content>
-          <div class="flex flex-column justify-content-between h-full">
-            <div class="">
-              <h3 class="mb-3 text-800">
-                {{ product.title }}
-              </h3>
-              <Rating
-                class="mb-3"
-                :rating="product.rating"
-              />
-
-              <span class="text-400">
-                <span v-if="!product.viewMore">
-                  {{ product.description.substring(0, 54) }}&nbsp;
-                </span>
-                <Inplace
-                  class="view-more"
-                  @update:active="(event) => {product.viewMore = event}"
-                >
-                  <template #display>
-                    <div
-                      v-tooltip.top="'Ver más'"
-                      class="text-900"
-                    >
-                      <span>&hellip;</span>
-                    </div>
-                  </template>
-                  <template #content>
-                    <p class="m-0">
-                      {{ product.description }}
-                    </p>
-                  </template>
-                </Inplace>
-              </span>
-            </div>
-            <div class="flex justify-content-between align-items-center mt-4">
-              <Chip class="pl-0 pr-3">
-                <span class="bg-primary border-circle w-2rem h-2rem flex align-items-center justify-content-center font-bold text-800">$</span>
-                <span class="ml-2 font-bold text-800 text-xl">{{ product.price }}</span>
-              </Chip>
-              <Button
-                icon="pi pi-cart-plus"
-                label="Add to Cart"
-                severity="warning"
-              />
-            </div>
-          </div>
-        </template>
-      </Card>
+      <ProductComponent
+        :product="product"
+        @product:select="handleProductSelect(product)"
+      />
     </article>
   </div>
 
@@ -85,21 +25,21 @@
     </h4>
   </div>
 </div>
+
+<ProductDialog
+  v-model="isDialogVisible"
+  :product="productSelected"
+/>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-
-import Card from 'primevue/card'
-import Image from 'primevue/image'
-import Button from 'primevue/button'
-import Chip from 'primevue/chip'
-import Inplace from 'primevue/inplace'
-
-import Rating from './Rating.vue'
-import CategoryChip from './CategoryChip.vue'
+import { computed, ref } from 'vue'
 
 import { useStoreProducts } from '../composables'
+import ProductComponent from './ProductComponent.vue'
+import ProductDialog from './ProductDialog.vue'
+
+import { Product } from '../models'
 
 const { products, dispatch_getProducts } = useStoreProducts()
 
@@ -114,11 +54,19 @@ const props = defineProps({
   }
 })
 
+const isDialogVisible = ref(false)
+const productSelected = ref<Product>()
+
 const filteredProducts = computed(() => products.value.filter(product => {
   const needle = props.searchText.toLowerCase()
 
   return product.title.toLowerCase().includes(needle)
 }))
+
+function handleProductSelect (product: Product) {
+  productSelected.value = product
+  isDialogVisible.value = true
+}
 
 await dispatch_getProducts(props.currentCategory)
 </script>

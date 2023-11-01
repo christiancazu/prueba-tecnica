@@ -34,6 +34,7 @@
       </template>
     </Suspense>
   </div>
+  <Toast />
 </div>
 </template>
 
@@ -45,6 +46,7 @@ import ProgressSpinner from 'primevue/progressspinner'
 import Searchbar from '../components/Searchbar.vue'
 import CategoryList from '../components/CategoryList.vue'
 import ProductList from '../components/ProductList.vue'
+import Toast from 'primevue/toast'
 
 const isRequestResolved = ref<boolean>(false)
 const currentCategory = ref<string>('All')

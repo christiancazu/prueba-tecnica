@@ -34,11 +34,11 @@
 
   <template #end>
     <Button
-      badge="8"
-      disabled
+      :badge="myOrders.length ? myOrders.length.toString() : undefined"
+      :disable="!myOrders.length"
       icon="pi pi-shopping-bag"
       label="My Products"
-      type="button"
+      @click="$router.push('/my-orders')"
     />
   </template>
 </Toolbar>
@@ -49,6 +49,8 @@ import Toolbar from 'primevue/toolbar'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 
+import { useStoreProducts } from '../composables'
+
 const props = defineProps({
   modelValue: {
     type: String,
@@ -58,12 +60,13 @@ const props = defineProps({
 
 const emit = defineEmits(['update:model-value'])
 
+const { myOrders } = useStoreProducts()
+
 function handleEmitValue (event: Event) {
   emit('update:model-value', (event.target as HTMLInputElement).value)
 }
 
 function handleClearInput () {
   emit('update:model-value', '')
-
 }
 </script>

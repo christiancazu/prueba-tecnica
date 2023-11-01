@@ -1,7 +1,7 @@
 import { computed } from 'vue'
 import { useStore } from 'vuex'
 
-import { Product } from '../../models'
+import { Order, Product } from '../../models'
 import { stateKey } from '../../store'
 
 export const useStoreProducts = () => {
@@ -10,8 +10,12 @@ export const useStoreProducts = () => {
   return {
     products: computed<Product[]>(() => state.products.products),
 
+    myOrders: computed<Order[]>(() => state.products.myOrders),
+
     dispatch_getProducts: (category: string) => dispatch('products/dispatch_getProducts', category),
 
-    ADD_PRODUCT: (product: Product) => commit(`products/ADD_PRODUCT`, product)
+    SET_VIEW_MORE: ({ id, value }: {id: number, value: boolean}) => commit(`products/SET_VIEW_MORE`, { id, value }),
+
+    ADD_ORDER: (order: Order) => commit(`products/ADD_ORDER`, order)
   }
 }
