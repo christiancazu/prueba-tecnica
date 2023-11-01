@@ -12,3 +12,9 @@ export interface Product {
   rating: Rating
   viewMore: boolean
 }
+
+export interface Category {
+  label: string,
+  icon: string,
+  route: string
+}
