@@ -1,7 +1,7 @@
 <template>
 <div class="grid">
   <article
-    v-for="product in props.products"
+    v-for="product in products"
     :key="product.id"
     class="col-12 lg:col-4 p-4"
   >
@@ -74,8 +74,6 @@
 </template>
 
 <script setup lang="ts">
-import { PropType } from 'vue'
-
 import Card from 'primevue/card'
 import Image from 'primevue/image'
 import Button from 'primevue/button'
@@ -83,16 +81,20 @@ import Chip from 'primevue/chip'
 import Inplace from 'primevue/inplace'
 
 import Rating from './Rating.vue'
-
-import { Product } from '../models'
 import CategoryChip from './CategoryChip.vue'
 
+import { useStoreProducts } from '../composables'
+
+const { products, dispatch_getProducts } = useStoreProducts()
+
 const props = defineProps({
-  products: {
-    type: Array as PropType<Product[]>,
-    default: () => []
+  currentCategory: {
+    type: String,
+    default: ''
   }
 })
+
+await dispatch_getProducts(props.currentCategory)
 </script>
 
 <style lang="scss">

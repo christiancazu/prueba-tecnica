@@ -1,6 +1,6 @@
 <template>
 <TabMenu
-  v-model:activeIndex="active"
+  v-model:activeIndex="activeTab"
   :model="categories"
 >
   <template #item="{ label, item, props }">
@@ -40,28 +40,34 @@ import { useRouter, useRoute } from 'vue-router'
 import { useStoreCategories } from '../composables'
 import { Category } from '../models'
 
-import TabMenu
-  from 'primevue/tabmenu'
+import TabMenu from 'primevue/tabmenu'
 
 const router = useRouter()
 const route = useRoute()
 const { dispatch_getCategories } = useStoreCategories()
 
-const active = ref(0)
+const activeTab = ref(0)
 const categories = ref<Category[]>([])
 
-onMounted(async () => {
-  active.value = categories.value.findIndex((item) => route.path === router.resolve(item.route).path)
+const emit = defineEmits(['change-category'])
+
+onMounted(() => setActiveTab())
+
+watch(route, () => {
+  setActiveTab()
+  emit('change-category', getCurrentCategory()?.label || 'All')
 })
 
-watch(
-  route,
-  () => {
-    active.value = categories.value.findIndex((item) => route.path === router.resolve(item.route).path)
-  },
-  { immediate: true }
-)
+function getCurrentCategory (): Category|undefined {
+  activeTab.value = categories.value.findIndex((item) => route.path === router.resolve(item.route).path)
+  return categories.value.find(item => route.path === router.resolve(item.route).path)
+}
 
+function setActiveTab () {
+  activeTab.value = categories.value.findIndex((item) => route.path === router.resolve(item.route).path)
+}
+
+// request
 const { data: categoryNames } = await dispatch_getCategories()
 
 categories.value = categoryNames.map((category: string) => ({

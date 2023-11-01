@@ -21,7 +21,6 @@ export const categories: Module<CategoryState, State> = {
           setTimeout(() => {
             resolve()
           }, 2000)
-
         })
 
         return axiosInstance.get<Category[]>('/products/categories')
