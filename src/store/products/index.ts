@@ -65,6 +65,14 @@ export const products: Module<ProductState, State> = {
       if (orderToModify) {
         orderToModify.amount = amount
       }
+    },
+
+    ['REMOVE_ORDER'] (state: ProductState, id: string) {
+      state.myOrders = state.myOrders.filter(myOrder => myOrder.id !== id)
+    },
+
+    ['REMOVE_ORDERS'] (state: ProductState) {
+      state.myOrders = []
     }
   }
 }

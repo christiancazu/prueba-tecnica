@@ -18,6 +18,10 @@ export const useStoreProducts = () => {
 
     ADD_ORDER: (order: Order) => commit(`products/ADD_ORDER`, order),
 
-    MODIFY_ORDER: ({ order, amount }: { order: Order, amount: number }) => commit('products/MODIFY_ORDER', { order, amount })
+    MODIFY_ORDER: ({ order, amount }: { order: Order, amount: number }) => commit('products/MODIFY_ORDER', { order, amount }),
+
+    REMOVE_ORDER: (id: string) => commit(`products/REMOVE_ORDER`, id),
+
+    REMOVE_ORDERS: () => commit(`products/REMOVE_ORDERS`)
   }
 }

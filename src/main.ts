@@ -8,6 +8,7 @@ import router from './router'
 import PrimeVue from 'primevue/config'
 import Tooltip from 'primevue/tooltip'
 import ToastService from 'primevue/toastservice'
+import ConfirmationService from 'primevue/confirmationservice'
 
 import 'primeflex/primeflex.css'
 import 'primevue/resources/themes/lara-dark-teal/theme.css'
@@ -21,5 +22,6 @@ createApp(App)
   .use(store, stateKey)
   .use(PrimeVue, { ripple: true })
   .use(ToastService)
+  .use(ConfirmationService)
   .directive('tooltip', Tooltip)
   .mount('#app')

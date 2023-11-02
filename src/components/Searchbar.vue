@@ -35,6 +35,7 @@
   <template #end>
     <Button
       :badge="myOrders.length ? myOrders.length.toString() : undefined"
+      badge-class="badge-cart"
       :disabled="!myOrders.length"
       icon="pi pi-shopping-bag"
       label="My Products"
@@ -70,3 +71,11 @@ function handleClearInput () {
   emit('update:model-value', '')
 }
 </script>
+
+<style>
+.badge-cart {
+  min-width: 1.2rem;
+  height: 1.2rem;
+  line-height: 1.2rem;
+}
+</style>

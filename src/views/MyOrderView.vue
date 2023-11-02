@@ -1,22 +1,18 @@
 <template>
 <div class="flex flex-column align-items-center">
-  <div class="w-9 my-4">
+  <div class="w-9 my-6">
     <h1 class="flex justify-content-start w-full">
-      My Orders
+      <Button
+        class="mr-4"
+        icon="pi pi-arrow-left"
+        outlined
+        rounded
+        @click="$router.push('/products')"
+      />  My Orders
     </h1>
 
-    <div class="card my-6">
+    <div class="card my-4">
       <DataTable :value="myOrders">
-        <!-- <template #header>
-          <div class="flex flex-wrap align-items-center justify-content-between gap-2">
-            <span class="text-xl text-900 font-bold">My Order</span>
-            <Button
-              icon="pi pi-refresh"
-              raised
-              rounded
-            />
-          </div>
-        </template> -->
         <Column style="width: 8%;">
           <template #body="slotProps">
             <div
@@ -72,6 +68,7 @@
               icon="pi pi-times"
               rounded
               severity="danger"
+              @click="confirmRemoveOrder(slotProps.data)"
             />
           </template>
         </Column>
@@ -87,6 +84,19 @@
         </template>
       </DataTable>
     </div>
+
+    <div
+      v-if="myOrders.length"
+      class="flex justify-content-end"
+    >
+      <Button
+        icon="pi pi-send"
+        label="Proccess Order"
+        :loading="isOrderProcessing"
+        size="large"
+        @click="handleProcessOrder"
+      />
+    </div>
   </div>
 </div>
 
@@ -100,6 +110,8 @@
 <script setup lang="ts">
 import { ref, provide } from 'vue'
 
+import { useRouter } from 'vue-router'
+
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Button from 'primevue/button'
@@ -108,11 +120,15 @@ import AmountComponent from '../components/AmountComponent.vue'
 import PriceComponent from '../components/PriceComponent.vue'
 import ProductDialog from '../components/ProductDialog.vue'
 
+import { useConfirm } from 'primevue/useconfirm'
+import { useToast } from 'primevue/usetoast'
+
 import { useStoreProducts } from '../composables'
 import { Order, Product } from '../models'
 
-const { myOrders, MODIFY_ORDER } = useStoreProducts()
+const { myOrders, MODIFY_ORDER, REMOVE_ORDER, REMOVE_ORDERS } = useStoreProducts()
 
+const isOrderProcessing = ref(false)
 const isDialogVisible = ref(false)
 const productSelected = ref<Product>()
 const provideAmount = ref(0)
@@ -120,8 +136,11 @@ const orderId = ref('')
 
 provide('provide-amount', provideAmount)
 
+const router = useRouter()
+const confirm = useConfirm()
+const toast = useToast()
+
 function handleProductSelect ({ id, product, amount }: {id: string, product: Product, amount: number}) {
-  console.warn({ id, product, amount })
   orderId.value = id
   productSelected.value = product
   provideAmount.value = amount
@@ -136,6 +155,40 @@ function getTotalToPay () {
   return +myOrders.value
     .reduce((acc, order) => acc += ((order.product.price as number) * order.amount), 0).toFixed(2)
 }
+
+
+function confirmRemoveOrder (order: Order) {
+  confirm.require({
+    message: 'Are you sure you want to remove the product?',
+    header: 'Confirmation',
+    icon: 'pi pi-exclamation-triangle',
+    accept: () => {
+      REMOVE_ORDER(order.id as string)
+      toast.add({ severity: 'info', summary: 'Confirmed', detail: 'Product Removed', life: 3000 })
+    }
+  })
+}
+
+function handleProcessOrder () {
+  confirm.require({
+    message: 'Are you sure you want to process your order?',
+    header: 'Confirmation',
+    icon: 'pi pi-exclamation-triangle',
+    accept: () => {
+      isOrderProcessing.value = true
+      setTimeout(() => {
+        isOrderProcessing.value = false
+        toast.add({ severity: 'info', summary: 'Confirmed', detail: 'Order processed Successfully', life: 3000 })
+      }, 2000)
+
+      setTimeout(() => {
+        router.push('/products')
+        REMOVE_ORDERS()
+      }, 2500)
+    }
+  })
+}
+
 </script>
 
 <style lang="scss">
