@@ -2,6 +2,8 @@
 
 ### Christian Carrillo Zúñiga
 
+[LIVE DEMO](https://prueba-tecnica.christiancazu.dev/)
+
 #### requerimientos
 
 1. node 16+
