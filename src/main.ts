@@ -5,6 +5,8 @@ import App from './App.vue'
 import { store, stateKey } from './store'
 import router from './router'
 
+import VueParticles from 'vue3-particles'
+
 import PrimeVue from 'primevue/config'
 import Tooltip from 'primevue/tooltip'
 import ToastService from 'primevue/toastservice'
@@ -23,5 +25,6 @@ createApp(App)
   .use(PrimeVue, { ripple: true })
   .use(ToastService)
   .use(ConfirmationService)
+  .use(VueParticles)
   .directive('tooltip', Tooltip)
   .mount('#app')

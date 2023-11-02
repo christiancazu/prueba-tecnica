@@ -29,7 +29,7 @@
         </Column>
         <Column
           header="Product"
-          style="width: 32%;"
+          style="width: 36%;"
         >
           <template #body="slotProps">
             {{ slotProps.data.product.title }}
@@ -45,7 +45,7 @@
         </Column>
         <Column
           header="Amount"
-          style="width: 22%;"
+          style="width: 20%;"
         >
           <template #body="slotProps">
             <AmountComponent v-model="slotProps.data.amount" />
@@ -53,7 +53,7 @@
         </Column>
         <Column
           header="Subtotal"
-          style="width: 12%;"
+          style="width: 16%;"
         >
           <template #body="slotProps">
             <div>
