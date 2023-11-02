@@ -1,6 +1,8 @@
 import { Module } from 'vuex'
-import { Order, Product } from '../../models'
 import { State } from '..'
+
+import { Order, Product } from '../../models'
+
 import { axiosInstance } from '../../config'
 
 export interface ProductState {
@@ -51,7 +53,18 @@ export const products: Module<ProductState, State> = {
     },
 
     ['ADD_ORDER'] (state: ProductState, order: Order) {
-      state.myOrders.push(order)
+      state.myOrders.push({
+        id: new Date().getTime().toString(),
+        ...order
+      })
+    },
+
+    ['MODIFY_ORDER'] (state: ProductState, { order, amount }: {order: Order, amount: number}) {
+      const orderToModify = state.myOrders.find(myOrder => myOrder.id === order.id)
+
+      if (orderToModify) {
+        orderToModify.amount = amount
+      }
     }
   }
 }

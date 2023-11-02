@@ -16,6 +16,8 @@ export const useStoreProducts = () => {
 
     SET_VIEW_MORE: ({ id, value }: {id: number, value: boolean}) => commit(`products/SET_VIEW_MORE`, { id, value }),
 
-    ADD_ORDER: (order: Order) => commit(`products/ADD_ORDER`, order)
+    ADD_ORDER: (order: Order) => commit(`products/ADD_ORDER`, order),
+
+    MODIFY_ORDER: ({ order, amount }: { order: Order, amount: number }) => commit('products/MODIFY_ORDER', { order, amount })
   }
 }

@@ -35,10 +35,10 @@
   <template #end>
     <Button
       :badge="myOrders.length ? myOrders.length.toString() : undefined"
-      :disable="!myOrders.length"
+      :disabled="!myOrders.length"
       icon="pi pi-shopping-bag"
       label="My Products"
-      @click="$router.push('/my-orders')"
+      @click="$router.push('/my-order')"
     />
   </template>
 </Toolbar>

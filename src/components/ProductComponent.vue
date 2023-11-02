@@ -38,7 +38,7 @@
           >
             <template #display>
               <div
-                v-tooltip.top="'Ver más'"
+                v-tooltip.top="'View more'"
                 class="text-900"
               >
                 <span>&hellip;</span>
@@ -53,33 +53,13 @@
         </span>
       </div>
       <div class="flex justify-content-between align-items-center mt-4">
-        <Chip class="pl-0 pr-3">
-          <span class="bg-primary border-circle w-2rem h-2rem flex align-items-center justify-content-center font-bold text-800">$</span>
-          <span class="ml-2 font-bold text-800 text-xl">{{ product.price }}</span>
-        </Chip>
-        <div
+        <PriceComponent :price="product.price" />
+
+        <AmountComponent
           v-if="addable"
-          class="flex align-items-center"
-        >
-          <Button
-            v-tooltip="'Decrement'"
-            :disabled="!amount"
-            icon="pi pi-minus"
-            rounded
-            severity="secondary"
-            @click="amount--"
-          />
-          <h3 class="mx-3">
-            {{ amount }}
-          </h3>
-          <Button
-            v-tooltip="'Increment'"
-            icon="pi pi-plus"
-            rounded
-            severity="secondary"
-            @click="amount++"
-          />
-        </div>
+          v-model="amount"
+        />
+
         <Button
           v-else
           icon="pi pi-cart-plus"
@@ -88,26 +68,24 @@
           @click="$emit('product:select')"
         />
       </div>
-      <slot
-        :amount="amount"
-        name="buttons"
-      />
+      <slot name="buttons" />
     </div>
   </template>
 </Card>
 </template>
 
 <script setup lang="ts">
-import { ref, type PropType } from 'vue'
+import { type PropType, inject, Ref } from 'vue'
 
 import Card from 'primevue/card'
 import Image from 'primevue/image'
 import Button from 'primevue/button'
-import Chip from 'primevue/chip'
 import Inplace from 'primevue/inplace'
 
 import Rating from './Rating.vue'
 import CategoryChip from './CategoryChip.vue'
+import PriceComponent from './PriceComponent.vue'
+import AmountComponent from './AmountComponent.vue'
 
 import { useStoreProducts } from '../composables'
 
@@ -125,6 +103,58 @@ defineEmits(['product:select'])
 
 const { SET_VIEW_MORE } = useStoreProducts()
 
-const amount = ref(1)
+const amount = inject('provide-amount') as Ref<number>
 </script>
+
+<style lang="scss">
+.product-card {
+  &__header {
+    position: relative;
+
+    & img {
+      overflow: hidden !important;
+      width: 100%;
+      height: 360px;
+      object-fit: cover;
+    }
+
+    & .product-card__category {
+      position: absolute;
+      bottom: 12px;
+      right: 8px;
+    }
+  }
+
+  &.p-card {
+    display: flex;
+    flex-direction: column;
+
+    & .p-card-body {
+      flex: 1;
+
+      & .p-card-content {
+        height: 100%;
+        padding: 0;
+      }
+    }
+  }
+
+  & .view-more {
+    display: inline-table;
+
+    &.p-inplace .p-inplace-display {
+      padding: 0;
+    }
+  }
+}
+
+.shadow-card {
+  transition: box-shadow 0.5s ease-in-out, transform 0.3s ease-in-out;
+
+  &:hover {
+    transform: scale(1.005);
+    box-shadow: 0px 1px 10px rgba(255, 255, 255, 0.38), 0px 4px 5px rgba(255, 255, 255, 0.36), 0px 2px 4px -1px rgba(255, 255, 255, 0.3);
+  }
+}
+</style>
 

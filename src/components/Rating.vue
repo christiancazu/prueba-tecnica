@@ -1,7 +1,7 @@
 <template>
 <div class="rating">
   <div
-    v-tooltip.top="`Valoración: ${props.rating.rate.toString()}`"
+    v-tooltip.top="`Rating: ${props.rating.rate.toString()}`"
     class="rating__starts"
   >
     <div
@@ -16,7 +16,7 @@
   </div>
 
   <div
-    v-tooltip.top="`Votaciones: ${props.rating.count.toString()}`"
+    v-tooltip.top="`Reviews: ${props.rating.count.toString()}`"
     class="rating__reviews"
   >
     <i class="pi pi-user" /><span>{{ props.rating.count }}</span>

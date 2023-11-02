@@ -13,7 +13,7 @@
         addable
         :product="product"
       >
-        <template #buttons="{ amount }">
+        <template #buttons>
           <div class="flex justify-content-end mt-4 mb-2">
             <Button
               icon="pi pi-times"
@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, computed } from 'vue'
+import { PropType, Ref, computed, inject } from 'vue'
 
 import Dialog from 'primevue/dialog'
 import Button from 'primevue/button'
@@ -48,7 +48,6 @@ import Button from 'primevue/button'
 import ProductComponent from './ProductComponent.vue'
 
 import { useToast } from 'primevue/usetoast'
-import { useStoreProducts } from '../composables'
 
 import { Order, Product } from '../models'
 
@@ -60,7 +59,7 @@ const props = defineProps({
   modelValue: Boolean
 })
 
-const emit = defineEmits(['update:model-value'])
+const emit = defineEmits(['update:model-value', 'product:add'])
 
 const modelValueVisible = computed({
   get () {
@@ -72,11 +71,14 @@ const modelValueVisible = computed({
 })
 
 const toast = useToast()
-const { ADD_ORDER } = useStoreProducts()
+
+const amount = inject('provide-amount') as Ref<number>
 
 function handleAddOrderToCart (order: Order) {
-  ADD_ORDER(order)
   toast.add({ severity: 'success', summary: 'success', detail: 'Product Added to Cart Successfully!', life: 3000 })
+
+  emit('product:add', order)
+
   modelValueVisible.value = false
 }
 </script>

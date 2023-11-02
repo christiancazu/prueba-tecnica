@@ -20,6 +20,7 @@ export interface Category {
 }
 
 export interface Order {
+  id?: string
   product: Partial<Product>
   amount: number
 }
