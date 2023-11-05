@@ -101,4 +101,10 @@ emitCurrentCategory()
   display: flex;
   justify-content: center;
 }
+
+@media screen and (max-width: 993px) {
+  .p-tabmenu-nav.p-reset {
+    flex-wrap: wrap;
+  }
+}
 </style>

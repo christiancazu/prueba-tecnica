@@ -1,6 +1,6 @@
 <template>
 <div class="flex flex-column align-items-center">
-  <div class="w-9 my-6">
+  <div class="page-content my-6">
     <h1 class="flex justify-content-start w-full">
       <Button
         class="mr-4"

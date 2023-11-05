@@ -78,4 +78,23 @@ function handleClearInput () {
   height: 1.2rem;
   line-height: 1.2rem;
 }
+
+@media screen and (max-width: 993px) {
+  .p-toolbar-group-center {
+    width: 100%;
+
+    & span {
+      width: 100%;
+
+      & input {
+        width: 100%;
+        margin-bottom: 8px;
+      }
+    }
+
+  }
+
+}
 </style>
+
+

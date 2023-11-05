@@ -18,7 +18,7 @@
   v-if="isRequestResolved"
   class="flex justify-content-center"
 >
-  <div class="w-9">
+  <div class="page-content">
     <Suspense :key="currentCategory">
       <ProductList
         :current-category="currentCategory"
